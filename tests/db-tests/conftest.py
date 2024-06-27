@@ -22,7 +22,7 @@ def aws(aws_credentials):
         
 @pytest.fixture
 def database(aws) -> DynamoDBProvider:
-    return DynamoDBProvider("test_table")
+    return DynamoDBProvider("test_table", "DEBUG")
         
 
 @pytest.fixture

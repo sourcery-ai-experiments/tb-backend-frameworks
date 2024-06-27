@@ -48,5 +48,5 @@ class DynamoDBProvider(DatabaseInterface):
             self.logger.error(f"Error updating item with key: {key} to {update_values}, error: {e}")
 
     def delete(self, key: Dict[str, Any]) -> None:
-        pass
+        self.table.delete_item(Key=key)
     

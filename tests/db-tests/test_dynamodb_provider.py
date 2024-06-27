@@ -18,7 +18,7 @@ def test_read_item(database: DynamoDBProvider, create_table: Generator[None, Non
 
 def test_update_item(database: DynamoDBProvider, create_table: Generator[None, None, None]) -> None:
     item = {"id": "2", "name": "updated_name2"}
-    database.update(item)
+    database.update({"id": "2"}, {"name": "updated_name2"})
     updated_item = database.read({"id": "2"})
     assert item == updated_item
     

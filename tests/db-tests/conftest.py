@@ -7,7 +7,7 @@ from db_framework.DynamoDBProvider import DynamoDBProvider
 
 @pytest.fixture()
 def aws_credentials():
-    """Mocked AWS Credentials"""
+    """Mocked AWS Credentials."""
     os.environ["AWS_ACCESS_KEY_ID"] = "testing"
     os.environ["AWS_SECRET_ACCESS_KEY"] = "testing"
     os.environ["AWS_SECURITY_TOKEN"] = "testing"
@@ -17,12 +17,13 @@ def aws_credentials():
 
 @pytest.fixture()
 def aws(aws_credentials):
+    """Mock AWS service with moto."""
     with mock_aws():
         yield boto3.resource("dynamodb", region_name="eu-west-2")
         
-        
 @pytest.fixture
 def database(aws) -> DynamoDBProvider:
+    """DynamoDBProvider instance."""
     logger = logging.getLogger("DynamoDbProvider")
     logger.setLevel(logging.DEBUG)
     handler = logging.StreamHandler()
@@ -30,10 +31,10 @@ def database(aws) -> DynamoDBProvider:
     handler.setFormatter(formatter)
     logger.addHandler(handler)
     return DynamoDBProvider(table="test_table", logger=logger)
-        
 
 @pytest.fixture
 def create_table():
+    """Create a DynamoDB table with mock data."""
     with mock_aws():
         dynamodb = boto3.resource('dynamodb', region_name='eu-west-2')
         table = dynamodb.create_table(
@@ -62,6 +63,3 @@ def create_table():
             batch.put_item(Item={"id": "3", "name": "test3"})
         yield
         table.delete()
-        
-
-

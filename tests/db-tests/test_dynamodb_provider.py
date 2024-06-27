@@ -1,5 +1,4 @@
 
-from fixtures import database, create_table
 from typing import Generator
 from db_framework.DynamoDBProvider import DynamoDBProvider
 

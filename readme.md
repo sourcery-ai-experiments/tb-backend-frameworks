@@ -14,7 +14,7 @@ virtualenv -p=3.11 .venv
 
 MAC:
 ```
-source .venv/bin/acticate
+source .venv/bin/activate
 ```
 
 WIN:

@@ -2,7 +2,7 @@ import os
 import pytest
 import boto3
 from moto import mock_aws
-from ...src.db_framework.DynamoDBProvider import DynamoDBProvider 
+from db_framework.DynamoDBProvider import DynamoDBProvider 
 
 @pytest.fixture(scope="function")
 def aws_credentials() -> None:
@@ -18,18 +18,18 @@ def aws(aws_credentials):
     with mock_aws():
         yield boto3.resource("dynamodb", region_name="eu-west-2")
         
+        
+@pytest.fixture
+def database() -> DynamoDBProvider:
+    return DynamoDBProvider("test_table")
+        
 
 @pytest.fixture
-def table_name() -> str:
-    return "test_table"
-
-
-@pytest.fixture
-def create_table(table_name): 
+def create_table(database):
     with mock_aws():
         dynamodb = boto3.resource('dynamodb', region_name='us-west-2')
         table = dynamodb.create_table(
-            TableName=table_name,
+            TableName="test_table",
             KeySchema=[
                 {
                     'AttributeName': 'id',
@@ -47,11 +47,12 @@ def create_table(table_name):
                 'WriteCapacityUnits': 1
             }
         )
-        table.meta.client.get_waiter('table_exists').wait(TableName=table_name)
+        table.meta.client.get_waiter('table_exists').wait(TableName="test_table")
+        database.create({"id": "1", "name": "test1"})
+        database.create({"id": "2", "name": "test2"})
+        database.create({"id": "3", "name": "test3"})
         yield
         table.delete()
         
-@pytest.fixture
-def database(table_name) -> DynamoDBProvider:
-    return DynamoDBProvider(table_name)
+
 

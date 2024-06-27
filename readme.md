@@ -6,6 +6,8 @@ A series of framework classes to facilitate database management, user account cr
 
 ## Setup .venv
 
+Ensure virtualenv command is available and run:
+
 ```
 virtualenv -p=3.11 .venv
 ```
@@ -20,17 +22,48 @@ WIN:
 .\venv\Scripts\activate
 ```
 
-Requirements:
-
-- boto3
-- moto
-- pytest
-
-*plus sub dependencies*
+## Requirements:
 
 ```
 pip install -r requirements.txt
 ```
+
+- boto3: AWS Python Client
+- moto: Mock boto3 for offline testing
+- pytest: For testing
+- pytest-watcher: Watch for file updates
+
+*plus sub dependencies*
+
+## Testing:
+
+Pytest is used for testing by running
+
+```
+pytest
+```
+
+Or with logging enabled
+
+```
+pytest -o log_cli=true
+
+```
+
+Watch for file changes and re-run tests with pytest-watcher
+
+```
+ptw .
+```
+
+Use `breakpoint()` to step through code and run
+
+```
+pytest -s
+```
+
+
+
 
 
 

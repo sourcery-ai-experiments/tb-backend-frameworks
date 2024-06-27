@@ -1,4 +1,5 @@
 import os
+import logging
 import pytest
 import boto3
 from moto import mock_aws
@@ -22,7 +23,13 @@ def aws(aws_credentials):
         
 @pytest.fixture
 def database(aws) -> DynamoDBProvider:
-    return DynamoDBProvider("test_table", "DEBUG")
+    logger = logging.getLogger("DynamoDbProvider")
+    logger.setLevel(logging.DEBUG)
+    handler = logging.StreamHandler()
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    return DynamoDBProvider(table="test_table", logger=logger)
         
 
 @pytest.fixture

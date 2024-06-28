@@ -12,21 +12,27 @@ class CognitoUserProvider(UserInterface):
         self.logger = logger
     
     @catch_exceptions
-    def create_user(self, email) -> None:
-        pass
+    def create_user(self, email: str) -> None:
+        self.client.admin_create_user(UserPoolId=self.user_pool_id, 
+                                      Username=email,
+                                      UserAttributes=[
+                                          {"Name": "email", "Value": email},
+                                          {"Name": "email_verified", "Value": "true"}])
     
     @catch_exceptions
     def read_user(self, email: str) -> None:
         return self.client.admin_get_user(UserPoolId=self.user_pool_id, Username=email)
     
     @catch_exceptions
-    def delete_user(self, user_id) -> None:
+    def delete_user(self, user_id: str) -> None:
         pass
     
     @catch_exceptions
-    def resend_temp_password(self, email) -> None:
-        pass
+    def resend_temp_password(self, email: str) -> None:
+        self.client.admin_create_user(UserPoolId=self.user_pool_id, Username=email, 
+                                      UserAttributes=[{"Name": "email_verified", "Value": "true"}],
+                                      MessageAction="RESEND")
     
     @catch_exceptions
-    def disable_user(self, user_id) -> None:
+    def disable_user(self, user_id: str) -> None:
         pass

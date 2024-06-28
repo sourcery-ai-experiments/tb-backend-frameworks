@@ -11,15 +11,13 @@ def test_create_user(identity_provider: UserInterface) -> None:
             UserPoolId=identity_provider.user_pool_id,
             Username="test3@example.com",
             UserAttributes=[
-                {'Name': 'email', 'Value': "test@example.com"}
-            ],
-            TemporaryPassword='TempPass1234!',
-            MessageAction='SUPPRESS'
-        )
-        
+                {'Name': 'email', 'Value': "test3@example.com"},
+                {'Name': 'email_verified', 'Value': "true"}
+            ]
+        )   
 
 def test_read_user(identity_provider: UserInterface) -> None:
-    with patch.object(identity_provider.client, 'admin_get_user', return_value={'Username': "test1@test.com"}) as mock_get_user:
+    with patch.object(identity_provider.client, 'admin_get_user', return_value={'Username': "test1@example.com"}) as mock_get_user:
         user = identity_provider.read_user("test1@example.com")
         mock_get_user.assert_called_once_with(
             UserPoolId=identity_provider.user_pool_id,
@@ -30,15 +28,19 @@ def test_read_user(identity_provider: UserInterface) -> None:
 
 def test_resend_temp_password(identity_provider: UserInterface) -> None:
     with patch.object(identity_provider.client, 'admin_create_user') as mock_resend_password:
-        old_user_attrs = identity_provider.admin_get_user("test1@example.com")["UserAttributes"]
-        identity_provider.create_user("test1@example.com")
-        new_user_attrs = identity_provider.admin_get_user("test1@example.com")["UserAttributes"]
+        old_user_attrs = identity_provider.read_user("test1@example.com")["UserAttributes"]
+        identity_provider.resend_temp_password("test1@example.com")
+        new_user_attrs = identity_provider.read_user("test1@example.com")["UserAttributes"]
         old_sub = next(attr['Value'] for attr in old_user_attrs if attr['Name'] == 'sub')
         new_sub = next(attr['Value'] for attr in new_user_attrs if attr['Name'] == 'sub')
         mock_resend_password.assert_called_once_with(
             UserPoolId=identity_provider.user_pool_id,
-            Username="test@example.com",
-            MessageAction='RESEND'
+            Username="test1@example.com",
+            MessageAction='RESEND',
+            UserAttributes=[
+                {'Name': 'email', 'Value': "test1@example.com"},
+                {'Name': 'email_verified', 'Value': "true"}
+            ],
         )
         assert old_sub != new_sub
         

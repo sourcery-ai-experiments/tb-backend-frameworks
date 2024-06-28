@@ -81,7 +81,7 @@ def identity_provider(cognito, logger):
     client = boto3.client('cognito-idp', region_name='eu-west-2')
     user_pool_id = client.create_user_pool(PoolName='test_pool')['UserPool']['Id']
     client_id = client.create_user_pool_client(UserPoolId=user_pool_id, ClientName="test_client")
-    for user in ["test1@test.com", "test2@test.com"]:
+    for user in ["test1@example.com", "test2@exmple.com"]:
         client.admin_create_user(UserPoolId=user_pool_id,
                                 Username=user,
                                 MessageAction="SUPPRESS",

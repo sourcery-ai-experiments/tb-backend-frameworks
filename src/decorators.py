@@ -1,15 +1,15 @@
 from logging import Logger
 from functools import wraps
 from typing import Callable
-from botocore.exceptions import ClientError
+from botocore.exceptions import ClientError, ParamValidationError
 
 def catch_exceptions(func: Callable) -> Callable:
     """ 
-    Function for creating a decorator that wraps a method and runs it with inside a try, except block with logging
+    Decorator that wraps a method and catches exceptions, logging them.
     """
     @wraps(func)
     def decorator(*args, **kwargs):
-        self = args[0]  # The first argument to the instance method will always be 'self'
+        self = args[0]
         logger = self.logger
         method_name = func.__name__
         try:
@@ -18,6 +18,12 @@ def catch_exceptions(func: Callable) -> Callable:
             logger.debug(f"Successfully completed {method_name} with result: {result}")
             return result
         except ClientError as e:
-            logger.error(f"Error during {method_name} with args: {args[1:]}, kwargs: {kwargs}, error: {e}")
-            raise  # Re-raise the exception after logging it
+            logger.error(f"ClientError during {method_name} with args: {args[1:]}, kwargs: {kwargs}, error: {e}")
+            raise
+        except ValueError as ve:
+            logger.error(f"ValueError during {method_name} with args: {args[1:]}, kwargs: {kwargs}, error: {ve}")
+            raise
+        except ParamValidationError as pve:
+            logger.error(f"ParamValidationError during {method_name} with args: {args[1:]}, kwargs: {kwargs}, error: {pve}")
+            raise
     return decorator

@@ -2,7 +2,7 @@ import boto3
 import logging
 from typing import Any, Dict
 from .Interface import DatabaseInterface
-from .decorators import catch_exceptions
+from decorators import catch_exceptions
 
 class DynamoDBProvider(DatabaseInterface):
     """

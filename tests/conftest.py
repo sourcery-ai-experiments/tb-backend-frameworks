@@ -77,7 +77,7 @@ def create_table():
         
     
 @pytest.fixture
-def identity_provider(cognito):
+def identity_provider(cognito, logger):
     client = boto3.client('cognito-idp', region_name='eu-west-2')
     user_pool_id = client.create_user_pool(PoolName='test_pool')['UserPool']['Id']
     client_id = client.create_user_pool_client(UserPoolId=user_pool_id, ClientName="test_client")
@@ -90,6 +90,6 @@ def identity_provider(cognito):
                                     {'Name': 'email_verified', 'Value': "true"}],
         )
     
-    yield CognitoUserProvider(user_pool_id, client_id, "eu-west-2")
+    yield CognitoUserProvider(user_pool_id, client_id, "eu-west-2", logger)
     
     

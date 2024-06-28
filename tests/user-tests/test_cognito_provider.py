@@ -19,13 +19,14 @@ def test_create_user(identity_provider: UserInterface) -> None:
         
 
 def test_read_user(identity_provider: UserInterface) -> None:
-    with patch.object(identity_provider.client, 'admin_get_user', return_value={'Username': "test_user_id"}) as mock_get_user:
+    with patch.object(identity_provider.client, 'admin_get_user', return_value={'Username': "test1@test.com"}) as mock_get_user:
         user = identity_provider.read_user("test1@example.com")
         mock_get_user.assert_called_once_with(
             UserPoolId=identity_provider.user_pool_id,
-            Username="test_user_id"
+            Username="test1@example.com"
         )
-        assert user['Username'] == "test_user_id"
+        username = user["Username"]
+        assert username == "test1@test.com"
 
 def test_resend_temp_password(identity_provider: UserInterface) -> None:
     with patch.object(identity_provider.client, 'admin_create_user') as mock_resend_password:

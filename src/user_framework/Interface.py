@@ -1,9 +1,10 @@
+import logging
 from typing import Protocol, runtime_checkable
 from abc import abstractmethod
 
 @runtime_checkable
 class UserInterface(Protocol):
-    def __init__(self, user_pool_id: str, client_id: str, region_name: str) -> None:
+    def __init__(self, user_pool_id: str, client_id: str, region_name: str, logger: logging.Logger) -> None:
         ...
 
     @abstractmethod

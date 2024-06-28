@@ -29,8 +29,11 @@ class CognitoUserProvider(UserInterface):
     
     @catch_exceptions
     def resend_temp_password(self, email: str) -> None:
-        self.client.admin_create_user(UserPoolId=self.user_pool_id, Username=email, 
-                                      UserAttributes=[{"Name": "email_verified", "Value": "true"}],
+        self.client.admin_create_user(UserPoolId=self.user_pool_id, 
+                                      Username=email, 
+                                      UserAttributes=[
+                                          {"Name": "email", "Value": email},
+                                          {"Name": "email_verified", "Value": "true"}],
                                       MessageAction="RESEND")
     
     @catch_exceptions

@@ -29,7 +29,8 @@ class DynamoDBProvider(DatabaseInterface):
 
         :param item: A dictionary representing the item to be created.
         """
-        self.table.put_item(Item=item)
+        if item:
+            self.table.put_item(Item=item)
     
     @catch_exceptions
     def read(self, key: Dict[str, Any]) -> Dict[str, Any]:

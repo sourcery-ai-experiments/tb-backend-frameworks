@@ -24,7 +24,7 @@ def test_read_user(identity_provider: UserInterface) -> None:
             Username="test1@example.com"
         )
         username = user["Username"]
-        assert username == "test1@test.com"
+        assert username == "test1@example.com"
 
 def test_resend_temp_password(identity_provider: UserInterface) -> None:
     with patch.object(identity_provider.client, 'admin_create_user') as mock_resend_password:

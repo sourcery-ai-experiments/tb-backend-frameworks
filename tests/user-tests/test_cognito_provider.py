@@ -42,17 +42,17 @@ def test_resend_temp_password(identity_provider: UserInterface) -> None:
 
 def test_disable_user(identity_provider: UserInterface) -> None:
     with patch.object(identity_provider.client, 'admin_disable_user') as mock_disable_user:
-        identity_provider.disable_user("test_user_id")
+        identity_provider.disable_user("test1@example.com")
         mock_disable_user.assert_called_once_with(
             UserPoolId=identity_provider.user_pool_id,
-            Username="test_user_id"
+            Username="test1@example.com"
         )
 
 def test_delete_user(identity_provider: UserInterface) -> None:
     with patch.object(identity_provider.client, 'admin_delete_user') as mock_delete_user:
-        identity_provider.delete_user(Username="test1@example.com")
+        identity_provider.delete_user("test1@example.com")
         mock_delete_user.assert_called_once_with(
             UserPoolId=identity_provider.user_pool_id,
-            Username="test_user_id"
+            Username="test1@example.com"
         )
     

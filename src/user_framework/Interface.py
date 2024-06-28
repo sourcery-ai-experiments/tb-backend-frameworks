@@ -24,5 +24,5 @@ class UserInterface(Protocol):
         ...
     
     @abstractmethod
-    def delete_user(self, user_id: str) -> None:
+    def delete_user(self, email: str) -> None:
         ...

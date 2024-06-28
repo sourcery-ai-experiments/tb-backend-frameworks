@@ -24,8 +24,8 @@ class CognitoUserProvider(UserInterface):
         return self.client.admin_get_user(UserPoolId=self.user_pool_id, Username=email)
     
     @catch_exceptions
-    def delete_user(self, user_id: str) -> None:
-        pass
+    def delete_user(self, email: str) -> None:
+        self.client.admin_delete_user(UserPoolId=self.user_pool_id, Username=email)
     
     @catch_exceptions
     def resend_temp_password(self, email: str) -> None:

@@ -37,5 +37,5 @@ class CognitoUserProvider(UserInterface):
                                       MessageAction="RESEND")
     
     @catch_exceptions
-    def disable_user(self, user_id: str) -> None:
-        pass
+    def disable_user(self, email: str) -> None:
+        self.client.admin_disable_user(UserPoolId=self.user_pool_id, Username=email)

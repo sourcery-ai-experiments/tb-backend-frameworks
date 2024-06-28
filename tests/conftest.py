@@ -75,23 +75,21 @@ def create_table():
         yield
         table.delete()
         
-        
+    
 @pytest.fixture
-def create_user_pool(cognito):
-    client = boto3.client('cognito-idp', region_name='eu-west-2')
-    yield client.create_user_pool(PoolName='test_pool')['UserPool']['Id']
-
-
-@pytest.fixture
-def create_client_id(cognito):
+def identity_provider(cognito):
     client = boto3.client('cognito-idp', region_name='eu-west-2')
     user_pool_id = client.create_user_pool(PoolName='test_pool')['UserPool']['Id']
     client_id = client.create_user_pool_client(UserPoolId=user_pool_id, ClientName="test_client")
-    yield user_pool_id, client_id
+    for user in ["test1@test.com", "test2@test.com"]:
+        client.admin_create_user(UserPoolId=user_pool_id,
+                                Username=user,
+                                MessageAction="SUPPRESS",
+                                UserAttributes=[
+                                    {'Name': 'email', 'Value': user},
+                                    {'Name': 'email_verified', 'Value': "true"}],
+        )
     
-@pytest.fixture
-def identity_provider(create_client_id):
-    user_pool_id, client_id = create_client_id
     yield CognitoUserProvider(user_pool_id, client_id, "eu-west-2")
     
     

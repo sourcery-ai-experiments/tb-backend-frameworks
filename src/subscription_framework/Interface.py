@@ -20,5 +20,5 @@ class SubscriptionInterface(Protocol):
         ...
  
     @abstractmethod
-    def restart_subscription(self, subscription_id: str) -> None:
+    def restart_subscription(self, ) -> None:
         ...

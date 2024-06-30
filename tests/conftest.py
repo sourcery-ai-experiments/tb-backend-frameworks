@@ -17,15 +17,19 @@ def aws_credentials():
     yield
     
 @pytest.fixture()
-def logger():
-    "Python logger"
-    logger = logging.getLogger("DynamoDbProvider")
-    logger.setLevel(logging.DEBUG)
-    handler = logging.StreamHandler()
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
-    return logger
+def logger_factory():
+    """Logger factory fixture"""
+    def _create_logger(name="DefaultLogger"):
+        logger = logging.getLogger(name)
+        logger.setLevel(logging.DEBUG)
+        handler = logging.StreamHandler()
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        handler.setFormatter(formatter)
+    
+        if not logger.handlers:
+            logger.addHandler(handler)
+        return logger
+    return _create_logger
     
 @pytest.fixture()
 def dynamo_db(aws_credentials):
@@ -39,8 +43,9 @@ def cognito(aws_credentials):
         yield boto3.client("cognito-idp")
         
 @pytest.fixture
-def database(dynamo_db, logger) -> DynamoDBProvider:
+def database(dynamo_db, logger_factory) -> DynamoDBProvider:
     """DynamoDBProvider instance."""
+    logger = logger_factory("DynamoDbProvider")
     return DynamoDBProvider(table="test_table", logger=logger)
 
 @pytest.fixture
@@ -77,7 +82,7 @@ def create_table():
         
     
 @pytest.fixture
-def identity_provider(cognito, logger):
+def identity_provider(cognito, logger_factory):
     client = boto3.client('cognito-idp', region_name='eu-west-2')
     user_pool_id = client.create_user_pool(PoolName='test_pool')['UserPool']['Id']
     client_id = client.create_user_pool_client(UserPoolId=user_pool_id, ClientName="test_client")
@@ -89,7 +94,7 @@ def identity_provider(cognito, logger):
                                     {'Name': 'email', 'Value': user},
                                     {'Name': 'email_verified', 'Value': "true"}],
         )
-    
+    logger = logger_factory("CognitoProvider")
     yield CognitoUserProvider(user_pool_id, client_id, "eu-west-2", logger)
     
     

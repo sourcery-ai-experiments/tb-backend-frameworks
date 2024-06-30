@@ -14,7 +14,7 @@ class DatabaseInterface(ABC):
         :param item: A dictionary representing the item to be created.
         :raises NotImplementedError: This method must be overridden in a subclass.
         """
-        pass
+        ...
 
     @abstractmethod
     def read(self, key: Dict[str, Any]) -> Dict[str, Any]:
@@ -25,7 +25,7 @@ class DatabaseInterface(ABC):
         :return: A dictionary representing the retrieved item, or an empty dictionary if the item is not found.
         :raises NotImplementedError: This method must be overridden in a subclass.
         """
-        pass
+        ...
 
     @abstractmethod
     def update(self, key: Dict[str, Any], update_values: Dict[str, Any]) -> None:
@@ -36,7 +36,7 @@ class DatabaseInterface(ABC):
         :param update_values: A dictionary representing the attributes to be updated and their new values.
         :raises NotImplementedError: This method must be overridden in a subclass.
         """
-        pass
+        ...
 
     @abstractmethod
     def delete(self, key: Dict[str, Any]) -> None:
@@ -46,4 +46,4 @@ class DatabaseInterface(ABC):
         :param key: A dictionary representing the key of the item to be deleted.
         :raises NotImplementedError: This method must be overridden in a subclass.
         """
-        pass
+        ...

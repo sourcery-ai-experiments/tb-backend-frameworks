@@ -2,7 +2,7 @@
 
 [![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/release/python-3110/)
 
-A series of framework classes to facilitate [database management](src/db_framework/), [user account creation](src/user_framework/) and [payment processing](src/payment_framework/).
+A series of framework classes to facilitate [database management](src/db_framework/), [user account creation](src/user_framework/) and [subscription processing](src/subscription_framework/).
 
 ## Setup .venv
 
